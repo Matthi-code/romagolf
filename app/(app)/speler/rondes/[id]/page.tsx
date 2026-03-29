@@ -61,6 +61,7 @@ export default function RondeDetailPage() {
   const [editDate, setEditDate] = useState("");
   const [editTime, setEditTime] = useState("");
   const [savingHero, setSavingHero] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -626,6 +627,24 @@ export default function RondeDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Verwijderen */}
+      <button
+        onClick={async () => {
+          if (!round || !confirm("Weet je zeker dat je deze ronde wilt verwijderen?")) return;
+          setDeleting(true);
+          await fetch("/api/rounds/delete", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ round_id: round.id }),
+          });
+          router.push("/competitie/scorekaarten");
+        }}
+        disabled={deleting}
+        className="w-full py-2.5 text-xs text-red-400 hover:text-red-600 transition-colors"
+      >
+        {deleting ? "Verwijderen..." : "Ronde verwijderen"}
+      </button>
 
       {/* Opmerking */}
       <div className="bg-white rounded-xl p-3 shadow-card">

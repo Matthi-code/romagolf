@@ -3,23 +3,37 @@ import { NextResponse } from "next/server";
 
 const client = new Anthropic();
 
-const VISION_PROMPT = `Dit is een scorekaart van een golfbaan in Nederland.
-Lees alle gegevens zorgvuldig uit en geef ALLEEN een JSON object terug.
+const VISION_PROMPT = `Dit is een scorekaart van een golfbaan in Nederland (Landgoed Bergvliet).
+Lees alle gegevens ZEER ZORGVULDIG uit en geef ALLEEN een JSON object terug.
 
 De scorekaart heeft deze kolommen (van links naar rechts):
-- Hole nummer
+- Hole nummer (10-18 of 1-9)
 - Par
-- Afstandskolommen (verschillende tees, negeer deze)
+- Afstandskolommen met gekleurde headers (geel/blauw/rood/oranje) — NEGEER deze compleet
 - SI (stroke index)
-- Speler: score (bruto slagen), stable (stableford punten)
-- Marker: score (bruto slagen), stable (stableford punten)
+- Speler kolom: handgeschreven score
+- Stable kolom: stableford punten van speler
+- Marker kolom: handgeschreven score
+- Stable kolom: stableford punten van marker
 
-Let op:
-- Rob is bijna altijd de Speler (linkerkolommen)
-- Matthi is bijna altijd de Marker (rechterkolommen)
-- Maar lees de namen van de kaart als die zichtbaar zijn
-- De totaalrij staat onderaan (Out / In / Tot)
-- Putts staan soms als klein getal naast de score
+BELANGRIJK — Hoe scores zijn geschreven:
+- De SCORE is het GROTE handgeschreven getal (bijv. 7, 4, 6, 5)
+- De PUTTS staan als KLEIN superscript getal NAAST of BOVEN de score (bijv. 7³ = score 7, putts 3)
+- Soms staan putts in een apart kleiner vakje naast de score
+- De score is ALTIJD het grotere getal, putts is ALTIJD het kleinere getal ernaast
+- Scores voor 9 holes liggen typisch tussen 3 en 8 per hole
+- Putts per hole liggen typisch tussen 1 en 3
+
+VERWAR SCORES NIET MET AFSTANDEN:
+- Afstanden zijn 3-cijferige getallen (bijv. 306, 285, 171) in de gekleurde kolommen — NEGEER deze
+- Scores zijn 1-cijferige getallen (3-8) in de Speler/Marker kolommen
+
+Spelers:
+- Rob is bijna altijd de Speler (links) — lees de naam bovenaan als die zichtbaar is
+- Matthi is bijna altijd de Marker (rechts)
+- HCP staat soms bovenaan naast de naam (bijv. "26.2" of "16.8")
+
+De totaalrij staat onderaan (In/Out/Tot). Lees het totaal bruto slagen en putts uit.
 
 Geef dit JSON terug (geen markdown, geen uitleg):
 {
@@ -27,10 +41,12 @@ Geef dit JSON terug (geen markdown, geen uitleg):
   "loop": "1-9" of "10-18" of "1-18",
   "holes_played": getal,
   "speler_naam": "naam of null",
+  "speler_hcp": HCP getal of null,
   "speler_score": totaal bruto slagen of null,
   "speler_stableford": totaal stableford punten of null,
   "speler_putts": totaal putts of null,
   "marker_naam": "naam of null",
+  "marker_hcp": HCP getal of null,
   "marker_score": totaal bruto slagen of null,
   "marker_stableford": totaal stableford punten of null,
   "marker_putts": totaal putts of null,
@@ -38,10 +54,11 @@ Geef dit JSON terug (geen markdown, geen uitleg):
     {
       "hole": getal,
       "par": getal,
-      "speler_score": getal of null,
-      "speler_putts": getal of null,
-      "marker_score": getal of null,
-      "marker_putts": getal of null
+      "si": getal,
+      "speler_score": bruto slagen (het GROTE getal),
+      "speler_putts": putts (het KLEINE getal ernaast),
+      "marker_score": bruto slagen (het GROTE getal),
+      "marker_putts": putts (het KLEINE getal ernaast)
     }
   ]
 }`;

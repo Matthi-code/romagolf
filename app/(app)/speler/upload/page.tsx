@@ -178,9 +178,11 @@ export default function UploadPage() {
         setRobScore(data.speler_score?.toString() || "");
         setRobStb(data.speler_stableford?.toString() || "");
         setRobPutts(data.speler_putts?.toString() || "");
+        setRobHcp(data.speler_hcp?.toString() || "");
         setMatthiScore(data.marker_score?.toString() || "");
         setMatthiStb(data.marker_stableford?.toString() || "");
         setMatthiPutts(data.marker_putts?.toString() || "");
+        setMatthiHcp(data.marker_hcp?.toString() || "");
         setLoop(data.loop || "10-18");
         setHolesPlayed(data.holes_played?.toString() || "9");
 

@@ -9,23 +9,65 @@
 | Aspect | Waarde |
 |--------|--------|
 | **Fase** | Fase 5: Productie |
-| **Focus** | App is live op Vercel, alle kernfunctionaliteit werkt |
-| **Blokkade** | Vercel Deployment Protection uitschakelen voor publieke toegang |
-| **Laatste update** | 2026-03-29 |
+| **Focus** | AI scorekaart-uitlezing fixen |
+| **Blokkade** | AI leest putts correct maar verwisselt met scores — grote handgeschreven getallen worden niet herkend |
+| **Laatste update** | 2026-03-30 |
 
 ---
 
 ## Volgende Stap
 
-1. Vercel Deployment Protection uitschakelen (dashboard > settings)
+1. **AI scorekaart uitlezing fixen** — scores (grote getallen) worden niet gelezen, alleen putts (kleine superscript). Oplossingsrichtingen: betere prompt, twee-staps analyse, of expliciet vragen om eerst alle getallen te identificeren
 2. Next.js upgraden naar nieuwste versie
 3. Geüploade foto's gebruiken als random foto's op andere pagina's
-4. Scorekaart foto-upload koppelen aan ronde (via /scorekaart command of upload flow)
-5. Custom domein overwegen (bijv. romagolf.nl)
+4. Custom domein overwegen (bijv. romagolf.nl)
+
+---
+
+## Deployment Info
+
+| Aspect | Waarde |
+|--------|--------|
+| **Vercel project** | `prj_Lca1ye2Gq868l27yGn5Yb8HzyAII` |
+| **Vercel URL** | https://romagolf.vercel.app |
+| **GitHub repo** | `Matthi-code/romagolf` |
+| **Auto-deploy** | Ja, push naar `main` → automatische deploy |
+| **Deployment Protection** | Uitgeschakeld (publiek toegankelijk) |
 
 ---
 
 ## Sessie Historie
+
+### 2026-03-30 — Sessie 4: Upload flow + AI scorekaart herkenning
+
+**Gedaan:**
+- Hole-by-hole invoervelden op upload pagina (9 of 18 rijen)
+- Bergvliet par/SI defaults per lus ingebakken
+- AI vult holes in bij foto-upload, handmatig invoeren ook mogelijk
+- HCP velden toegevoegd aan upload flow
+- Delete functionaliteit voor rondes (knop + API)
+- AI prompt verbeterd met specifiekere instructies
+- Env vars correct ingesteld op Vercel (waren nog `xxx`)
+
+**Blokkade:**
+- AI leest putts (kleine superscript getallen) correct maar zet ze in score-veld
+- Grote handgeschreven scores worden niet herkend
+- Moet opgelost worden met betere prompt of twee-staps analyse
+
+**Volgende sessie:**
+- AI scorekaart uitlezing fixen (prioriteit 1)
+- Next.js upgrade
+- Foto's als achtergronden
+
+### 2026-03-29 — Sessie 3: Scorekaarten pagina + stableford + deployment fix
+
+**Gedaan:**
+- Stableford punten tonen en bewerkbaar op ronde detail pagina
+- Scorekaarten overzicht pagina (`/competitie/scorekaarten`) met upload knop
+- Hamburger menu + bottom nav uitgebreid met Scorekaarten
+- Vercel gekoppeld aan GitHub repo `Matthi-code/romagolf`
+- Succesvol gedeployed naar productie
+- Beslissing "stableford niet tonen" herzien → nu wel zichtbaar
 
 ### 2026-03-29 — Sessie 2: Van prototype naar productie
 

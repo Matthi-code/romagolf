@@ -67,6 +67,25 @@ Voor foto's en filters: gebruik het meest recente seizoen met rondes als "actief
 
 ---
 
+## 2026-03-30 — AI scorekaart uitlezing: score vs putts verwisseling
+
+**Situatie:**
+Claude Vision leest scorekaart foto's maar verwart scores met putts. De handgeschreven scorekaart heeft grote getallen (score, bijv. 7) met kleine superscript getallen (putts, bijv. ³). De AI leest alleen de kleine getallen en zet die in het score-veld.
+
+**Poging 1:** Prompt verduidelijkt met "groot getal = score, klein = putts" → putts kwamen in score-veld
+**Poging 2:** Prompt nog specifieker → zelfde probleem, nu scores in Rob/Mat kolommen maar putts leeg
+
+**Mogelijke oplossingen:**
+1. Twee-staps analyse: eerst alle getallen per cel identificeren, dan toewijzen
+2. Prompt die expliciet vraagt: "per hole, noem BEIDE getallen die je ziet"
+3. Lagere temperature of andere model parameters
+4. Expliciet voorbeeld geven in de prompt van hoe "7³" gelezen moet worden
+
+**Gotcha:**
+De AI heeft moeite met het onderscheiden van handgeschreven scores en putts die dicht bij elkaar staan op de fysieke scorekaart.
+
+---
+
 ## 2026-03-29 — cmux browser commando's
 
 **Situatie:**

@@ -92,7 +92,7 @@ Als de gebruiker stopt, afsluit, of je vermoedt dat de sessie eindigt:
 
 **Project:** appromagolf
 **Beschrijving:** App waarin we de scores bijhouden van de golfwedstrijden
-**Type:** data
+**Type:** web
 **Gestart:** 2026-03-29
 
 ---
@@ -130,7 +130,13 @@ PROJECT_GOAL=prototype        # prototype | demo | mvp | production
 
 ## 🔧 TECH STACK
 
-Python
+- **Framework**: Next.js 14 (App Router) + TypeScript
+- **Database**: Supabase (PostgreSQL, EU Frankfurt)
+- **AI**: Anthropic Claude Vision (claude-sonnet-4-20250514)
+- **Weerdata**: Open-Meteo API (gratis, geen key)
+- **Styling**: Tailwind CSS
+- **Hosting**: Vercel
+- **Auth**: Simpel wachtwoord + naam kiezen (geen echte auth)
 
 ---
 
@@ -171,10 +177,10 @@ Python
 ### Configuratie
 
 ```
-PROJECT_DIR=/users/matthi/Claude//appromagolf
-PROD_SERVER=geen
-DEV_PORT=8000
-TEST_COMMAND=pytest tests/
+PROJECT_DIR=/users/matthi/Claude/app.romagolf
+PROD_SERVER=Vercel
+DEV_PORT=3000
+TEST_COMMAND=npm test
 ```
 
 ---
@@ -369,6 +375,6 @@ Zeg: "Zet auto-footer uit" of "Stop met vraag herhalen"
 ---
 
 **Project:** appromagolf
-**Type:** data
+**Type:** web
 **Aangemaakt:** 2026-03-29
 **Template versie:** 1.0

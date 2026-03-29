@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: #f7f5f0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #1a6b3c;
+  color: white;
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Smooth card interactions */
+.card-interactive {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card-interactive:active {
+  transform: scale(0.98);
+}
+
+/* Score highlight */
+.score-big {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Zalmgolf-style dashed highlight card */
+.card-highlight {
+  border: 1.5px dashed #e8855a;
+  background: #fef3ee;
+}
+
+/* Clean underline inputs */
+.input-underline {
+  border: none;
+  border-bottom: 1.5px solid #e0dcd4;
+  border-radius: 0;
+  background: transparent;
+  padding: 8px 0;
+  transition: border-color 0.2s;
+}
+.input-underline:focus {
+  outline: none;
+  border-bottom-color: #e8855a;
+}

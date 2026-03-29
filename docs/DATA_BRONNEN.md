@@ -1,6 +1,6 @@
 # Databronnen
 
-> Overzicht van databronnen voor appromagolf.
+> Overzicht van databronnen voor Vrijmigo.
 
 ---
 
@@ -8,90 +8,61 @@
 
 | Bron | Type | Kosten | Frequentie |
 |------|------|--------|------------|
-| [Bron 1] | API | €[X]/call | Real-time |
-| [Bron 2] | File | Gratis | Dagelijks |
-| [Bron 3] | Database | €[X]/maand | - |
+| Scorekaart foto's | Upload (Claude Vision) | ~$0.01/foto | Per ronde |
+| Open-Meteo | API | Gratis | Per ronde |
+| Historische Excel/JSON | File | Gratis | Eenmalig (seed) |
 
 ---
 
 ## 🔌 API Bronnen
 
-### [Bron Naam]
+### Anthropic Claude Vision
 
 | Aspect | Waarde |
 |--------|--------|
-| URL | `https://api.example.com` |
-| Auth | API Key |
-| Rate Limit | [X] calls/minuut |
-| Kosten | €[X] per call |
-| Documentatie | [Link] |
+| Model | claude-sonnet-4-20250514 |
+| Auth | API Key (ANTHROPIC_API_KEY) |
+| Gebruik | Scorekaart foto's uitlezen |
+| Output | JSON met scores, spelers, putts |
 
-**Endpoints:**
+### Open-Meteo
 
-| Endpoint | Beschrijving |
-|----------|--------------|
-| GET /resource | [Beschrijving] |
-
-**Voorbeeld Response:**
-
-```json
-{
-  "data": {...}
-}
-```
+| Aspect | Waarde |
+|--------|--------|
+| URL | `https://api.open-meteo.com/v1/forecast` |
+| Auth | Geen (gratis, geen key) |
+| Rate Limit | Redelijk — geen strikte limiet |
+| Gebruik | Weerdata per ronde (temp, wind, neerslag) |
+| Coördinaten | lat 51.6419, lon 4.8652 (Bergvliet, Oosterhout) |
+| Historisch | Ja — retroactief beschikbaar |
 
 ---
 
 ## 📁 File Bronnen
 
-### [Bron Naam]
+### Historische rondes (rounds.json)
 
 | Aspect | Waarde |
 |--------|--------|
-| Formaat | CSV / JSON / XML |
-| Locatie | [URL of pad] |
-| Update frequentie | [Dagelijks/Wekelijks/etc] |
-| Grootte | ~[X] MB |
+| Formaat | JSON |
+| Locatie | docs/seed-data/rounds.json |
+| Records | 153 rondes (april 2024 – maart 2026) |
+| Eenmalig | Ja — import via seed script |
 
-**Schema:**
-
-| Kolom | Type | Beschrijving |
-|-------|------|--------------|
-| [kolom1] | string | [Beschrijving] |
-| [kolom2] | integer | [Beschrijving] |
+**Datakwaliteit:**
+- Vroege rondes missen putts en stableford data
+- Winterrondes hebben soms geen scores (alleen matchplay resultaat)
+- Sommige rondes hebben 8 holes i.p.v. 9
+- Geen weerdata of tijdstippen in historische data
 
 ---
 
-## 🔄 Data Pipeline
+## 🔄 Data Flow
 
 ```
-[Bron 1] ──┐
-           ├──→ [Transformatie] ──→ [Database] ──→ [API/Frontend]
-[Bron 2] ──┘
+Scorekaart foto ──→ Claude Vision ──→ JSON scores ──→ Supabase
+                                           │
+Open-Meteo ──────────────────────────→ Weerdata ──→ Supabase
+                                           │
+Historische JSON ──→ Seed script ──────────────────→ Supabase
 ```
-
-### Stappen
-
-1. **Extract:** Data ophalen van bronnen
-2. **Transform:** Cleaning, normalisatie, verrijking
-3. **Load:** Opslaan in database
-4. **Serve:** Beschikbaar maken via API
-
----
-
-## ⚠️ Data Kwaliteit
-
-| Check | Beschrijving | Frequentie |
-|-------|--------------|------------|
-| Completeness | Geen missende verplichte velden | Per import |
-| Validity | Data voldoet aan schema | Per import |
-| Freshness | Data is niet ouder dan [X] uur | Continu |
-
----
-
-## 🔐 Privacy & Compliance
-
-- [ ] Geen PII opslaan
-- [ ] Data retention policy: [X] dagen
-- [ ] GDPR compliant
-- [ ] Logging van data toegang

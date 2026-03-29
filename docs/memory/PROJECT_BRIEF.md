@@ -1,7 +1,6 @@
 # 📋 Project Brief
 
-> Dit document beschrijft het project en de gekozen aanpak.
-> **Wordt ingevuld door `/interview` command** — Run dit eerst!
+> Vrijmigo — persoonlijke golf-webapp voor Matthi en Rob.
 
 ---
 
@@ -9,17 +8,22 @@
 
 | Aspect | Waarde |
 |--------|--------|
-| **Naam** | appromagolf |
-| **Type** | _[web/api/saas/data/automation]_ |
-| **Doel** | _[prototype/demo/mvp/production]_ |
-| **Tijdlijn** | _[1-2 dagen / 1 week / 2-4 weken / langer]_ |
+| **Naam** | Vrijmigo (appromagolf) |
+| **Type** | web |
+| **Doel** | prototype |
+| **Tijdlijn** | 2-4 weken |
 | **Gestart** | 2026-03-29 |
 
 ---
 
 ## Beschrijving
 
-App waarin we de scores bijhouden van de golfwedstrijden
+Een persoonlijke golf-webapp voor twee spelers: **Matthi** en **Rob**. Ze spelen op Landgoed Bergvliet in Oosterhout. De app combineert:
+
+1. **Spelersomgeving** — persoonlijk dashboard, statistieken, AI-advies per speler
+2. **Competitie-omgeving** — onderlinge stand, head-to-head, anekdotes
+
+Scorekaarten worden gefotografeerd en via Claude Vision automatisch uitgelezen. Weerdata wordt automatisch opgehaald via Open-Meteo.
 
 ---
 
@@ -27,24 +31,9 @@ App waarin we de scores bijhouden van de golfwedstrijden
 
 | Aspect | Waarde |
 |--------|--------|
-| **Stijl** | _[Ralph Wiggum loops / KISS-TDD / vibe coding / hybrid]_ |
-| **Begeleiding** | _[autopilot / co-pilot / manual]_ |
-| **Ralph Wiggum** | _[✅ Enabled / ❌ Disabled]_ |
-
-### Wat betekent dit?
-
-| Stijl | Beschrijving |
-|-------|--------------|
-| **Ralph Wiggum loops** | Claude werkt autonoom door taken heen, jij reviewt achteraf |
-| **KISS-TDD** | Test-driven development, kleine stappen, quality first |
-| **Vibe coding** | Snel itereren, testen en refactor later |
-| **Hybrid** | Start vibe, refactor met tests als het werkt |
-
-| Begeleiding | Beschrijving |
-|-------------|--------------|
-| **Autopilot** | Claude beslist zelf bij twijfel, jij reviewt resultaat |
-| **Co-pilot** | Claude stelt opties voor, jij kiest |
-| **Manual** | Jij geeft expliciete instructies |
+| **Stijl** | Vibe coding |
+| **Begeleiding** | Co-pilot |
+| **Ralph Wiggum** | ❌ Disabled |
 
 ---
 
@@ -52,9 +41,13 @@ App waarin we de scores bijhouden van de golfwedstrijden
 
 | Component | Keuze |
 |-----------|-------|
-| **Backend** | _[Python+FastAPI / Python+Django / Node.js / geen]_ |
-| **Database** | _[SQLite / PostgreSQL / MySQL / geen]_ |
-| **Frontend** | _[HTMX+Jinja / React+Next.js / Astro / Plain HTML / n.v.t.]_ |
+| **Framework** | Next.js 14 (App Router) + TypeScript |
+| **Database** | Supabase (PostgreSQL, EU Frankfurt) |
+| **AI** | Anthropic Claude Vision (claude-sonnet-4-20250514) |
+| **Weerdata** | Open-Meteo API (gratis, geen key) |
+| **Styling** | Tailwind CSS |
+| **Hosting** | Vercel |
+| **Auth** | Simpel wachtwoord + naam kiezen |
 
 ---
 
@@ -62,41 +55,47 @@ App waarin we de scores bijhouden van de golfwedstrijden
 
 | Aspect | Waarde |
 |--------|--------|
-| **Target** | _[lokaal / OrbStack / eigen server / cloud]_ |
-| **Productie server** | geen |
-| **Dev poort** | 8000 |
+| **Target** | Vercel |
+| **Dev poort** | 3000 |
 
 ---
 
-## Configuratie (voor CLAUDE.md)
+## Spelers
 
-```
-RALPH_WIGGUM_ENABLED=false
-KISS_TDD_ENABLED=false
-AUTONOMY_LEVEL=copilot
-```
+| Speler | Rol op scorekaart | Kleur |
+|--------|-------------------|-------|
+| Matthi | Marker (rechts) | Groen (#1a6b3c) |
+| Rob | Speler (links) | Rood (#c0392b) |
 
 ---
 
-## 🎯 Volgende Stappen
+## Golfbaan
 
-> **Dit document is nog niet ingevuld?**
-> Run `/interview` om te starten!
+- **Naam:** Landgoed Bergvliet
+- **Locatie:** Oosterhout
+- **Coördinaten:** lat 51.6419, lon 4.8652
+- **Lus A:** holes 1-9, par 36
+- **Lus B:** holes 10-18, par 35
 
-> **Na het invullen:**
->
-> 1. Run `/spec-interview` om WAT je gaat bouwen te definiëren
-> 2. Dit genereert:
->    - `SPEC.md` — referentie document (menselijk leesbaar)
->    - `PROMPT.md` — input voor Ralph Wiggum (als enabled)
-> 3. Start development:
->    - Ralph: `/ralph-wiggum:ralph-loop "Lees docs/memory/PROMPT.md"`
->    - Normaal: `/develop`
+---
+
+## Historische Data
+
+153 rondes van april 2024 t/m maart 2026, beschikbaar in `docs/seed-data/rounds.json`.
+
+| Seizoen | Rondes | Winnaar |
+|---------|--------|---------|
+| Zomer 2024 | 48 | Matthi (26-20, 2 gelijk) |
+| Winter 24-25 | 24 | Matthi (11-10, 3 gelijk) |
+| Zomer 2025 | 61 | Matthi (30-24, 7 gelijk) |
+| Winter 25-26 | 20 | Matthi (12-6, 2 gelijk) |
+| **Totaal** | **153** | **Matthi (79-60, 14 gelijk)** |
 
 ---
 
 ## Notities
 
-_Aanvullende context uit het interview:_
-
-- 
+- Seizoenen: Zomer (apr-nov) = strokeplay, Winter (nov-mrt) = matchplay
+- Putts altijd uitdrukken als putts_per_hole voor eerlijke vergelijking
+- Mobile-first — primair op telefoon gebruikt (op de baan)
+- Veel historische data mist putts, stableford en weerdata

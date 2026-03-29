@@ -19,6 +19,15 @@ interface ScorecardData {
   marker_score: number | null;
   marker_stableford: number | null;
   marker_putts: number | null;
+  hole_scores?: {
+    hole: number;
+    par?: number;
+    si?: number;
+    speler_score: number | null;
+    speler_putts: number | null;
+    marker_score: number | null;
+    marker_putts: number | null;
+  }[];
 }
 
 interface WeatherData {
@@ -163,6 +172,7 @@ export default function UploadPage() {
           matthi_hcp: null,
           winner,
           weather,
+          hole_scores: scorecard?.hole_scores || null,
         }),
       });
 

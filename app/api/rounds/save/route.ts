@@ -8,7 +8,7 @@ export async function POST(req: Request) {
       date, start_time, season, season_type, play_style, loop, holes_played,
       notes, rob_score, rob_stableford, rob_putts, rob_hcp,
       matthi_score, matthi_stableford, matthi_putts, matthi_hcp,
-      winner, weather,
+      winner, weather, hole_scores,
     } = body;
 
     const supabase = createServerClient();
@@ -82,6 +82,44 @@ export async function POST(req: Request) {
         is_winner: winner === "rob",
         is_draw: isDraw,
       });
+    }
+
+    // Insert hole scores if available
+    if (hole_scores && Array.isArray(hole_scores) && hole_scores.length > 0) {
+      const holeRows: {
+        round_id: string;
+        player_id: string;
+        hole_number: number;
+        par: number | null;
+        si: number | null;
+        gross_score: number | null;
+        putts: number | null;
+      }[] = [];
+
+      for (const h of hole_scores) {
+        // Rob (speler)
+        holeRows.push({
+          round_id: newRound.id,
+          player_id: rob.id,
+          hole_number: h.hole,
+          par: h.par || null,
+          si: h.si || null,
+          gross_score: h.speler_score ?? null,
+          putts: h.speler_putts ?? null,
+        });
+        // Matthi (marker)
+        holeRows.push({
+          round_id: newRound.id,
+          player_id: matthi.id,
+          hole_number: h.hole,
+          par: h.par || null,
+          si: h.si || null,
+          gross_score: h.marker_score ?? null,
+          putts: h.marker_putts ?? null,
+        });
+      }
+
+      await supabase.from("hole_scores").insert(holeRows);
     }
 
     // Insert weather if available

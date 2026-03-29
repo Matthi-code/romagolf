@@ -1,0 +1,10 @@
+{
+  "plugins": {
+    "marketplaces": [
+      "anthropics/claude-plugins-official"
+    ],
+    "installed": [
+      "ralph-wiggum@claude-plugins-official"
+    ]
+  }
+}

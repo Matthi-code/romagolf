@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "1password": {
+      "command": "/Users/jaccostokx/projects/1password-mcp/.venv/bin/python",
+      "args": ["-m", "onepassword_mcp.server"],
+      "env": {
+        "PYTHONPATH": "/Users/jaccostokx/projects/1password-mcp/src"
+      }
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "desktop-commander": {
+      "command": "npx",
+      "args": ["@wonderwhy-er/desktop-commander@latest"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+    }
+  }
+}

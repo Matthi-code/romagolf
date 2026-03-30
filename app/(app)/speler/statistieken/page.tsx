@@ -239,6 +239,7 @@ export default function StatistiekenPage() {
                       <div className="flex-1 space-y-1">
                         {mAvg !== null && (
                           <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-semibold text-matthi w-12">Matthi</span>
                             <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
                               <div
                                 className="h-full rounded-full bg-matthi"
@@ -250,6 +251,7 @@ export default function StatistiekenPage() {
                         )}
                         {rAvg !== null && (
                           <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-semibold text-rob w-12">Rob</span>
                             <div className="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
                               <div
                                 className="h-full rounded-full bg-rob"
@@ -264,7 +266,7 @@ export default function StatistiekenPage() {
                   );
                 })}
               </div>
-              <p className="text-center text-[9px] text-gray-300 mt-2">Lager = beter</p>
+              <p className="text-center text-[10px] text-gray-500 font-medium mt-2">Lager = beter</p>
             </div>
           )}
 

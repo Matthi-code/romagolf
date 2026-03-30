@@ -16,7 +16,7 @@ const competitieTabs = [
   { href: "/competitie/scorekaarten", label: "Scores", icon: "📋" },
   { href: "/competitie/head-to-head", label: "H2H", icon: "⚔️" },
   { href: "/competitie/historie", label: "Trends", icon: "📈" },
-  { href: "/competitie/fotos", label: "Foto's", icon: "📷" },
+  { href: "/speler/statistieken", label: "Stats", icon: "📊" },
 ];
 
 export default function BottomNav() {

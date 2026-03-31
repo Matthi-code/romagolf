@@ -639,12 +639,12 @@ export default function RondeDetailPage() {
           </div>
           <div className="flex gap-2">
             <a
-              href="https://mijn.golf.nl/mijn-spel/scores/scorekaart-aanmaken/scorekaart-condities"
+              href="https://mijn.golf.nl/mijn-spel/scores"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 py-2 rounded-xl bg-[#00875a] text-white text-xs font-medium text-center active:scale-[0.98] transition-transform"
             >
-              Open mijn.golf.nl
+              Open golf.nl
             </a>
             <button
               onClick={() => {

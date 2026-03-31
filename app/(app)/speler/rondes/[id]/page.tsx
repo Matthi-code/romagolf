@@ -628,6 +628,44 @@ export default function RondeDetailPage() {
         </div>
       )}
 
+      {/* Golf.nl doorsturen */}
+      {round && holeScores.length > 0 && (
+        <div className="bg-white rounded-xl p-3 shadow-card">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm">🏌️</span>
+              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Doorsturen naar golf.nl</p>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <a
+              href="https://mijn.golf.nl/mijn-spel/scores/scorekaart-aanmaken/scorekaart-condities"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 py-2 rounded-xl bg-[#00875a] text-white text-xs font-medium text-center active:scale-[0.98] transition-transform"
+            >
+              Open mijn.golf.nl
+            </a>
+            <button
+              onClick={() => {
+                if (!round) return;
+                const robHoles = holeScores.filter(h => h.player_name === "Rob");
+                const matHoles = holeScores.filter(h => h.player_name === "Matthi");
+                const lines = robHoles.map((rh) => {
+                  const mh = matHoles.find(m => m.hole_number === rh.hole_number);
+                  return `${rh.hole_number}: Rob ${rh.gross_score ?? "-"} (${rh.putts ?? "-"}p) · Mat ${mh?.gross_score ?? "-"} (${mh?.putts ?? "-"}p)`;
+                });
+                const text = `Bergvliet ${round.loop} · ${round.date}\nRob: ${round.rob_score} (HCP ${round.rob_hcp ?? "-"})\nMatthi: ${round.matthi_score} (HCP ${round.matthi_hcp ?? "-"})\n\n${lines.join("\n")}`;
+                navigator.clipboard.writeText(text).then(() => alert("Scores gekopieerd!")).catch(() => {});
+              }}
+              className="py-2 px-3 rounded-xl bg-gray-100 text-xs font-medium text-gray-600 active:scale-[0.98] transition-transform"
+            >
+              Kopieer
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Verwijderen */}
       <button
         onClick={async () => {

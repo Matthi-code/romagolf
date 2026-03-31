@@ -363,7 +363,6 @@ export default function UploadPage() {
               <input
                 type="file"
                 accept="image/*"
-                capture="environment"
                 onChange={handlePhotoSelect}
                 className="hidden"
               />

@@ -187,6 +187,7 @@ export default function UploadPage() {
         setMatthiHcp(data.marker_hcp?.toString() || "");
         setLoop(data.loop || "10-18");
         setHolesPlayed(data.holes_played?.toString() || "9");
+        if (data.opmerking) setNotes(data.opmerking);
 
         // Vul hole scores in vanuit AI
         if (data.hole_scores && data.hole_scores.length > 0) {

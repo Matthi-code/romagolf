@@ -64,7 +64,8 @@ Geef dit JSON terug (geen markdown, geen uitleg):
       "marker_score": Matthi slagen (GROOT getal),
       "marker_putts": Matthi putts (KLEIN getal)
     }
-  ]
+  ],
+  "opmerking": "Korte opmerking over de ronde, ALLEEN als er iets opvalt: een bijzonder goede of slechte hole, een enorm verschil, een opmerkelijk patroon, of iets grappigs. Mag humoristisch zijn maar niet geforceerd. null als er niets bijzonders is."
 }`;
 
 export async function POST(req: Request) {

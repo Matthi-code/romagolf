@@ -12,7 +12,8 @@ Kijk naar de rechterhelft van de header waar "Speler" en "Marker" staat:
 - Bij de kolom "Speler" staat een handgeschreven "R" (Rob). LINKS van deze R staat een decimaal getal — dit is Rob's HCP (bijv. 16,2 of 15,4)
 - Bij de kolom "Marker" staat een handgeschreven "M" (Matthi). LINKS van deze M staat een decimaal getal — dit is Matthi's HCP (bijv. 19,9 of 20,1)
 - HCP waarden zijn getallen als 16,2 of 19,9 — NIET de datum (die heeft een / erin)
-- Rob's HCP ligt rond 16, Matthi's rond 20
+- Rob's HCP ligt ALTIJD tussen 10 en 20 (rond 16). Als je 26,2 leest is dat waarschijnlijk 16,2
+- Matthi's HCP ligt rond 20
 - Dit is VERPLICHT om uit te lezen. Kijk er goed naar.
 
 STAP 2 — KOLOMMEN op de scorekaart (van links naar rechts):

@@ -145,6 +145,8 @@ export default function UploadPage() {
     if (hasRob && hasMat) {
       setWinner(matTotal < robTotal ? "matthi" : robTotal < matTotal ? "rob" : "gelijk");
     }
+    // Wis opmerking bij herberekening — AI opmerking was gebaseerd op mogelijk foute data
+    setNotes("");
   }
 
   async function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {

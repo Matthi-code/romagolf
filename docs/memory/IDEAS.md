@@ -9,10 +9,10 @@
 | Datum | Bron | Idee | Status | Prioriteit |
 |-------|------|------|--------|------------|
 | 2026-03-29 | Gebruiker | Stableford punten weer toevoegen/tonen | 💡 onderzoeken | ⭐⭐ |
-| 2026-03-29 | Gebruiker | Statistieken zoals golf.nl: scores donut chart (bogey/par/birdie/eagle %), par gemiddelde per par3/4/5, beste/slechtste 9h en 18h, meest bezochte banen | 💡 onderzoeken | ⭐⭐⭐ |
+| 2026-03-29 | Gebruiker | Statistieken uitbreiden: meest bezochte banen, 18h records | 💡 onderzoeken | ⭐⭐ |
 | 2026-03-29 | Gebruiker | HCP verloop grafiek zoals golf.nl: dagresultaat (lijn) + handicap (stippellijn), begin- en eindwaarde labels | 💡 onderzoeken | ⭐⭐ |
 | 2026-03-29 | AI | Geüploade foto's gebruiken als random achtergronden op alle pagina's | 💡 onderzoeken | ⭐ |
-| 2026-03-29 | AI | Golfkilometers berekenen (geschatte afstand per ronde) | 💡 onderzoeken | ⭐ |
+| 2026-03-29 | Gebruiker | Golfkilometers op basis van afslag→hole afstand per hole | ✅ gerealiseerd | ⭐ |
 
 ---
 
@@ -39,6 +39,8 @@
 
 | Datum | Idee | Verwijzing |
 |-------|------|------------|
+| 2026-03-31 | Scores donut, par gemiddelde, beste/slechtste ronde | /speler/statistieken |
+| 2026-03-31 | Golfkilometers (gele tee Bergvliet) | /speler/statistieken |
 | 2026-03-29 | Head-to-head vergelijking | /competitie/head-to-head |
 | 2026-03-29 | Trends/grafieken pagina | /competitie/historie |
 | 2026-03-29 | Foto gallery met upload | /competitie/fotos |

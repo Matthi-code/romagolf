@@ -6,11 +6,10 @@ export function getSeasonFromDate(date: string): {
   const month = d.getMonth() + 1;
   const year = d.getFullYear();
 
-  // Suggestie op basis van maand — gebruiker kan altijd overschrijven
-  // Zomer: april (4) t/m oktober (10) — strokeplay
-  // Winter: november (11) t/m maart (3) — matchplay
-  // NB: In de praktijk bepalen Matthi en Rob zelf wanneer het seizoen wisselt
-  if (month >= 4 && month <= 10) {
+  // Zomer: maart (3) t/m oktober (10) — strokeplay
+  // Winter: november (11) t/m februari (2) — matchplay
+  // NB: Matthi en Rob starten het zomerseizoen al in maart
+  if (month >= 3 && month <= 10) {
     return { season: `Zomer ${year}`, type: "zomer" };
   } else if (month >= 11) {
     return {

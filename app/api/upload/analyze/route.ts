@@ -6,59 +6,59 @@ const client = new Anthropic();
 const VISION_PROMPT = `Dit is een scorekaart van een golfbaan in Nederland (Landgoed Bergvliet).
 Lees alle gegevens ZEER ZORGVULDIG uit en geef ALLEEN een JSON object terug.
 
-De scorekaart heeft deze kolommen (van links naar rechts):
+KOLOMMEN op de scorekaart (van links naar rechts):
 - Hole nummer (10-18 of 1-9)
 - Par
 - Afstandskolommen met gekleurde headers (geel/blauw/rood/oranje) — NEGEER deze compleet
 - SI (stroke index)
-- Speler kolom: handgeschreven score
-- Stable kolom: stableford punten van speler
-- Marker kolom: handgeschreven score
-- Stable kolom: stableford punten van marker
+- Kolom 1: Rob SLAGEN (het grote handgeschreven getal)
+- Kolom 2: Rob PUTTS (het kleine getal ernaast, soms superscript)
+- Kolom 3: Matthi SLAGEN (het grote handgeschreven getal)
+- Kolom 4: Matthi PUTTS (het kleine getal ernaast, soms superscript)
 
-BELANGRIJK — Hoe scores zijn geschreven:
-- De SCORE is het GROTE handgeschreven getal (bijv. 7, 4, 6, 5)
-- De PUTTS staan als KLEIN superscript getal NAAST of BOVEN de score (bijv. 7³ = score 7, putts 3)
-- Soms staan putts in een apart kleiner vakje naast de score
-- De score is ALTIJD het grotere getal, putts is ALTIJD het kleinere getal ernaast
-- Scores voor 9 holes liggen typisch tussen 3 en 8 per hole
+BOVENAAN DE KAART:
+- Er staan letters "R" (Rob) en "M" (Matthi)
+- LINKS van de "R" staat Rob's HCP (bijv. "26.2")
+- LINKS van de "M" staat Matthi's HCP (bijv. "19.9")
+- Lees deze HCP waarden ALTIJD uit
+
+HOE SCORES ZIJN GESCHREVEN:
+- Per hole staan er 2 getallen per speler: een GROOT getal (slagen) en een KLEIN getal (putts)
+- Voorbeeld: "7³" of "7 3" = score 7 slagen, 3 putts
+- Slagen per hole liggen typisch tussen 3 en 9
 - Putts per hole liggen typisch tussen 1 en 3
+- Lees voor ELKE speler BEIDE getallen uit: slagen EN putts
 
 VERWAR SCORES NIET MET AFSTANDEN:
-- Afstanden zijn 3-cijferige getallen (bijv. 306, 285, 171) in de gekleurde kolommen — NEGEER deze
-- Scores zijn 1-cijferige getallen (3-8) in de Speler/Marker kolommen
+- Afstanden zijn 3-cijferige getallen (bijv. 306, 285) in de gekleurde kolommen — NEGEER deze
+- Scores zijn 1-cijferige getallen (3-9) in de handgeschreven kolommen
 
-Spelers:
-- Rob is bijna altijd de Speler (links) — lees de naam bovenaan als die zichtbaar is
-- Matthi is bijna altijd de Marker (rechts)
-- HCP staat soms bovenaan naast de naam (bijv. "26.2" of "16.8")
-
-De totaalrij staat onderaan (In/Out/Tot). Lees het totaal bruto slagen en putts uit.
+De totaalrij staat onderaan (In/Out/Tot). Tel de slagen en putts op.
 
 Geef dit JSON terug (geen markdown, geen uitleg):
 {
   "course_name": "naam van de baan als zichtbaar, anders null",
   "loop": "1-9" of "10-18" of "1-18",
   "holes_played": getal,
-  "speler_naam": "naam of null",
-  "speler_hcp": HCP getal of null,
-  "speler_score": totaal bruto slagen of null,
-  "speler_stableford": totaal stableford punten of null,
-  "speler_putts": totaal putts of null,
-  "marker_naam": "naam of null",
-  "marker_hcp": HCP getal of null,
-  "marker_score": totaal bruto slagen of null,
-  "marker_stableford": totaal stableford punten of null,
-  "marker_putts": totaal putts of null,
+  "speler_naam": "Rob",
+  "speler_hcp": Rob's HCP getal of null,
+  "speler_score": Rob totaal bruto slagen of null,
+  "speler_stableford": Rob totaal stableford of null,
+  "speler_putts": Rob totaal putts of null,
+  "marker_naam": "Matthi",
+  "marker_hcp": Matthi's HCP getal of null,
+  "marker_score": Matthi totaal bruto slagen of null,
+  "marker_stableford": Matthi totaal stableford of null,
+  "marker_putts": Matthi totaal putts of null,
   "hole_scores": [
     {
       "hole": getal,
       "par": getal,
       "si": getal,
-      "speler_score": bruto slagen (het GROTE getal),
-      "speler_putts": putts (het KLEINE getal ernaast),
-      "marker_score": bruto slagen (het GROTE getal),
-      "marker_putts": putts (het KLEINE getal ernaast)
+      "speler_score": Rob slagen (GROOT getal),
+      "speler_putts": Rob putts (KLEIN getal),
+      "marker_score": Matthi slagen (GROOT getal),
+      "marker_putts": Matthi putts (KLEIN getal)
     }
   ]
 }`;

@@ -398,6 +398,52 @@ export default function UploadPage() {
             </div>
           )}
 
+          {/* Seizoen + datum */}
+          <div className="bg-white rounded-xl p-3 shadow-card">
+            <div className="grid grid-cols-3 gap-2 items-end">
+              <div>
+                <label className="text-[9px] text-gray-400 uppercase block mb-0.5">Datum</label>
+                <input
+                  type="date"
+                  value={date}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                    const s = getSeasonFromDate(e.target.value);
+                    setSeason(s.season);
+                    setSeasonType(s.type);
+                  }}
+                  className="w-full px-2 py-1.5 rounded-lg border border-gray-200 text-xs font-mono"
+                />
+              </div>
+              <div>
+                <label className="text-[9px] text-gray-400 uppercase block mb-0.5">Tijdstip</label>
+                <input
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="w-full px-2 py-1.5 rounded-lg border border-gray-200 text-xs font-mono"
+                />
+              </div>
+              <div>
+                <label className="text-[9px] text-gray-400 uppercase block mb-0.5">Seizoen</label>
+                <select
+                  value={season}
+                  onChange={(e) => handleSeasonChange(e.target.value)}
+                  className="w-full px-2 py-1.5 rounded-lg border border-gray-200 text-xs font-medium"
+                >
+                  <option value="Zomer 2026">Zomer 2026</option>
+                  <option value="Winter 25-26">Winter 25-26</option>
+                  <option value="Zomer 2025">Zomer 2025</option>
+                  <option value="Winter 24-25">Winter 24-25</option>
+                  <option value="Zomer 2024">Zomer 2024</option>
+                </select>
+              </div>
+            </div>
+            <p className="text-[9px] text-gray-400 mt-1.5">
+              {seasonType === "zomer" ? "Strokeplay — laagste score wint" : "Matchplay — meeste holes gewonnen"}
+            </p>
+          </div>
+
           {/* Weer badge */}
           {weather && (
             <div className="bg-white rounded-xl p-3 flex items-center justify-between">

@@ -9,15 +9,18 @@
 | Aspect | Waarde |
 |--------|--------|
 | **Fase** | Fase 5: Productie |
-| **Focus** | AI scorekaart-uitlezing fixen |
-| **Blokkade** | AI leest putts correct maar verwisselt met scores — grote handgeschreven getallen worden niet herkend |
-| **Laatste update** | 2026-03-30 |
+| **Focus** | Statistieken uitbreiden + AI scorekaart fix |
+| **Blokkade** | AI scorekaart-uitlezing nog niet gefixt (scores vs putts verwisseling) |
+| **Laatste update** | 2026-03-31 |
 
 ---
 
 ## Volgende Stap
 
-1. **AI scorekaart uitlezing fixen** — scores (grote getallen) worden niet gelezen, alleen putts (kleine superscript). Oplossingsrichtingen: betere prompt, twee-staps analyse, of expliciet vragen om eerst alle getallen te identificeren
+1. **AI scorekaart uitlezing fixen** — scores vs putts verwisseling (prioriteit 1)
+2. **Meer statistieken toevoegen** — ideeën uit E-Golf app screenshots
+3. Next.js upgraden naar nieuwste versie
+4. Geüploade foto's gebruiken als random foto's op andere pagina's
 2. Next.js upgraden naar nieuwste versie
 3. Geüploade foto's gebruiken als random foto's op andere pagina's
 4. Custom domein overwegen (bijv. romagolf.nl)
@@ -37,6 +40,24 @@
 ---
 
 ## Sessie Historie
+
+### 2026-03-31 — Sessie 5: Statistieken pagina
+
+**Gedaan:**
+- Statistieken pagina gebouwd (`/speler/statistieken`): scores donut, par gemiddelde, beste/slechtste ronde, golfkilometers
+- Bergvliet hole-lengtes (gele tee) ingebakken voor golfkilometers berekening
+- Stats tab toegevoegd aan competitie bottom nav (vervangt Foto's)
+- Par gemiddelde: namen in kleur (Matthi groen, Rob rood) + "Lager = beter" duidelijker
+- Scorekaart foto's Bergvliet uitgelezen: alle par/SI/afstanden voor 18 holes
+
+**Data:**
+- Slechts 1 ronde met hole-by-hole data in DB — meer rondes uploaden voor zinvolle statistieken
+- Bergvliet gele tee: Out 3061m, In 2867m, Totaal 5928m (par 71)
+
+**Volgende sessie:**
+- AI scorekaart uitlezing fixen (prioriteit 1)
+- Meer rondes uploaden voor betere statistieken
+- E-Golf inspiratie: meer stats toevoegen (HCP verloop verbeterd, meest bezochte banen)
 
 ### 2026-03-30 — Sessie 4: Upload flow + AI scorekaart herkenning
 

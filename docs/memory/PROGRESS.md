@@ -59,10 +59,19 @@
 - DB fix: ronde 31 maart → Zomer 2026
 - Ideeën gelogd: golf.nl koppeling, scorekaart goedkeuring
 
+**Later in sessie ook nog gedaan:**
+- Foto-upload versneld: resize naar 1200px + JPEG 80% voordat het naar AI gaat (~80% kleiner)
+- Voortgangsbalk bij analyse: statusberichten + groene balk + geschatte tijd
+- Upload: camera + galerij keuze (capture=environment verwijderd)
+- AI opmerking wordt gewist bij herberekening (voorkomt foute opmerkingen)
+- Vision prompt: Rob HCP altijd 10-20, 26.2 → waarschijnlijk 16.2
+- Vision prompt: HCP als STAP 1 (allereerste instructie, werd overgeslagen)
+
 **Volgende sessie:**
-- Scorekaart goedkeuring bouwen
-- Vision prompt testen met nieuwe upload (HCP + scores)
-- Stableford + HCP grafiek
+- Scorekaart goedkeuring bouwen (marker keurt speler goed)
+- Vision prompt testen: HCP + scores/putts uitlezing valideren met nieuwe upload
+- Stableford punten weer tonen
+- HCP verloop grafiek
 
 ### 2026-03-31 — Sessie 5: Statistieken pagina
 

@@ -86,6 +86,32 @@ De AI heeft moeite met het onderscheiden van handgeschreven scores en putts die 
 
 ---
 
+## 2026-04-01 — Vision prompt: HCP uitlezing vereist prioriteit
+
+**Situatie:**
+Claude Vision slaat HCP waarden over als de instructie te ver in de prompt staat. De AI focust op scores en negeert de header.
+
+**Oplossing:**
+HCP uitlezing als STAP 1 (allereerste instructie) met concrete hints: Rob HCP altijd 10-20, Matthi rond 20. Bij 26.2 → waarschijnlijk 16.2.
+
+**Gotcha:**
+Zet de belangrijkste extractie-instructies BOVENAAN de Vision prompt, niet na de kolom-beschrijvingen. De AI leest de prompt sequentieel en geeft prioriteit aan het begin.
+
+---
+
+## 2026-04-01 — Golf.nl heeft geen publieke API
+
+**Situatie:**
+Onderzocht of we scores automatisch naar golf.nl kunnen doorsturen.
+
+**Bevinding:**
+Golf.nl draait op OutSystems met een API Service Layer, maar die is alleen voor gecertificeerde clubsoftware-leveranciers (15 partijen). Geen publieke API. De React Native app (com.ngf.mijngolf) gebruikt interne endpoints. Garmin/Arccos integreren via USGA, niet via golf.nl.
+
+**Oplossing:**
+"Open golf.nl" knop die mijn.golf.nl opent + "Kopieer" knop voor snel overtypen. Contact app@golf.nl voor eventueel partnerschap.
+
+---
+
 ## 2026-03-29 — cmux browser commando's
 
 **Situatie:**

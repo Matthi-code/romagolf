@@ -43,22 +43,25 @@
 ### 2026-04-01 — Sessie 6: Features, AI Coach, golf.nl koppeling
 
 **Gedaan:**
+- Statistieken pagina: scores donut, par gemiddelde, golfkilometers, beste/slechtste ronde
+- Stats tab in bottom nav (vervangt Foto's)
 - Seizoen fix: maart = Zomer + seizoen aanpasbaar in upload review stap
-- Vision prompt 3x verbeterd: kolommen expliciet, HCP uitlezing, Rob/Matthi hints
+- Vision prompt 5x verbeterd: kolommen expliciet, HCP als STAP 1, Rob HCP 10-20 range, 26.2→16.2 hint
 - Golf.nl doorsturen: "Open golf.nl" + "Kopieer" knoppen (upload + ronde detail)
 - Spelersprofiel op H2H: sterke/zwakke punten per speler (berekend, geen AI kosten)
 - AI Coach advies per speler: humoristisch, opgeslagen in DB, historie met datum
 - AI Coach overlay: tik voor groot + eerdere adviezen, ververs-knopje
 - Scorekaart foto opslaan bij upload + bekijken op ronde detail (thumbnail + fullscreen)
 - Upload: foto kiezen uit galerij (niet alleen camera)
-- AI opmerking bij scorekaart uitlezing (humoristisch als er reden voor is)
+- AI opmerking bij scorekaart uitlezing (humoristisch, alleen als relevant)
+- Herberekening wist AI opmerking (voorkomt foute opmerkingen)
 - Golf.nl API onderzoek: geen publieke API, OutSystems backend, webapp is beste optie
-- Bergvliet hole-lengtes (gele tee) ingebakken voor golfkilometers
+- DB fix: ronde 31 maart → Zomer 2026
 - Ideeën gelogd: golf.nl koppeling, scorekaart goedkeuring
 
 **Volgende sessie:**
 - Scorekaart goedkeuring bouwen
-- Vision prompt testen met nieuwe upload
+- Vision prompt testen met nieuwe upload (HCP + scores)
 - Stableford + HCP grafiek
 
 ### 2026-03-31 — Sessie 5: Statistieken pagina

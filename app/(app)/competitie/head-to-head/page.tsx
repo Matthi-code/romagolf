@@ -52,6 +52,8 @@ export default function HeadToHeadPage() {
   const [loading, setLoading] = useState(true);
   const [photoIdx] = useState(() => Math.floor(Math.random() * PHOTOS.length));
   const [holeRecords, setHoleRecords] = useState<HoleRecord[]>([]);
+  const [aiAdvice, setAiAdvice] = useState<Record<string, string>>({});
+  const [aiLoading, setAiLoading] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     async function load() {
@@ -676,6 +678,38 @@ export default function HeadToHeadPage() {
                       </div>
                     ))}
                   </div>
+
+                  {/* AI Advies */}
+                  {aiAdvice[name] ? (
+                    <div className="mt-2 bg-amber-50 rounded-lg p-2">
+                      <p className="text-[10px] text-gray-600 leading-relaxed italic">{aiAdvice[name]}</p>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={async () => {
+                        setAiLoading((prev) => ({ ...prev, [name]: true }));
+                        try {
+                          const res = await fetch("/api/ai-advice", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              playerName: name,
+                              parStats: profile.parStats,
+                              totalAvgPutts: profile.totalAvgPutts,
+                              insights: profile.insights,
+                            }),
+                          });
+                          const data = await res.json();
+                          if (data.advice) setAiAdvice((prev) => ({ ...prev, [name]: data.advice }));
+                        } catch { /* ignore */ }
+                        setAiLoading((prev) => ({ ...prev, [name]: false }));
+                      }}
+                      disabled={aiLoading[name]}
+                      className="mt-2 w-full py-1.5 rounded-lg bg-amber-50 text-[10px] font-medium text-amber-700 active:scale-[0.98] transition-transform"
+                    >
+                      {aiLoading[name] ? "Coach denkt na..." : "AI Coach advies"}
+                    </button>
+                  )}
                 </div>
               ))}
             </div>

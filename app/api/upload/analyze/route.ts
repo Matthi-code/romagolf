@@ -6,7 +6,16 @@ const client = new Anthropic();
 const VISION_PROMPT = `Dit is een scorekaart van een golfbaan in Nederland (Landgoed Bergvliet).
 Lees alle gegevens ZEER ZORGVULDIG uit en geef ALLEEN een JSON object terug.
 
-KOLOMMEN op de scorekaart (van links naar rechts):
+STAP 1 — LEES EERST DE HEADER (bovenste rij):
+De header bevat gedrukte kolomnamen en handgeschreven tekst erboven/erin.
+Kijk naar de rechterhelft van de header waar "Speler" en "Marker" staat:
+- Bij de kolom "Speler" staat een handgeschreven "R" (Rob). LINKS van deze R staat een decimaal getal — dit is Rob's HCP (bijv. 16,2 of 15,4)
+- Bij de kolom "Marker" staat een handgeschreven "M" (Matthi). LINKS van deze M staat een decimaal getal — dit is Matthi's HCP (bijv. 19,9 of 20,1)
+- HCP waarden zijn getallen als 16,2 of 19,9 — NIET de datum (die heeft een / erin)
+- Rob's HCP ligt rond 16, Matthi's rond 20
+- Dit is VERPLICHT om uit te lezen. Kijk er goed naar.
+
+STAP 2 — KOLOMMEN op de scorekaart (van links naar rechts):
 - Hole nummer (10-18 of 1-9)
 - Par
 - Afstandskolommen met gekleurde headers (geel/blauw/rood/oranje) — NEGEER deze compleet
@@ -16,17 +25,7 @@ KOLOMMEN op de scorekaart (van links naar rechts):
 - Kolom 3: Matthi SLAGEN (het grote handgeschreven getal)
 - Kolom 4: Matthi PUTTS (het kleine getal ernaast, soms superscript)
 
-BOVENAAN DE KAART — HCP UITLEZEN (ZEER BELANGRIJK):
-De bovenste rij van de kaart bevat handgeschreven tekst. Zoek naar:
-- Een letter "R" (= Rob) met LINKS ervan een decimaal getal = Rob's HCP
-- Een letter "M" (= Matthi) met LINKS ervan een decimaal getal = Matthi's HCP
-- Voorbeeld: "26,2 R" betekent Rob's HCP is 26.2, "19,9 M" betekent Matthi's HCP is 19.9
-- De letters R en M staan in de kolommen Speler en Marker
-- HCP is een getal met 1 decimaal, typisch tussen 5.0 en 36.0 (Rob rond 16, Matthi rond 20)
-- Er staat ook een datum bovenaan (bijv. "29/3") — dat is GEEN HCP, datums bevatten een /
-- ALS JE GEEN HCP KUNT VINDEN, geef null terug — maar kijk GOED, het staat er bijna altijd
-
-HOE SCORES ZIJN GESCHREVEN:
+STAP 3 — HOE SCORES ZIJN GESCHREVEN:
 - Per hole staan er 2 getallen per speler: een GROOT getal (slagen) en een KLEIN getal (putts)
 - Voorbeeld: "7³" of "7 3" = score 7 slagen, 3 putts
 - Slagen per hole liggen typisch tussen 3 en 9

@@ -53,8 +53,21 @@ export default function HeadToHeadPage() {
   const [photoIdx] = useState(() => Math.floor(Math.random() * PHOTOS.length));
   const [holeRecords, setHoleRecords] = useState<HoleRecord[]>([]);
   const [aiAdvice, setAiAdvice] = useState<Record<string, string>>({});
+  const [aiHistory, setAiHistory] = useState<Record<string, string[]>>({});
   const [aiLoading, setAiLoading] = useState<Record<string, boolean>>({});
   const [aiExpanded, setAiExpanded] = useState<string | null>(null);
+
+  // Restore AI advice from localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("ai-coach-advice");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.current) setAiAdvice(parsed.current);
+        if (parsed.history) setAiHistory(parsed.history);
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   useEffect(() => {
     async function load() {
@@ -682,13 +695,43 @@ export default function HeadToHeadPage() {
 
                   {/* AI Advies */}
                   {aiAdvice[name] ? (
-                    <button
-                      onClick={() => setAiExpanded(aiExpanded === name ? null : name)}
-                      className="mt-2 w-full bg-amber-50 rounded-lg p-2 text-left active:scale-[0.99] transition-transform"
-                    >
-                      <p className="text-[10px] text-gray-600 leading-relaxed italic line-clamp-2">{aiAdvice[name]}</p>
-                      <p className="text-[9px] text-amber-500 mt-0.5">Tik voor groter</p>
-                    </button>
+                    <div className="mt-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <button
+                          onClick={async () => {
+                            setAiLoading((prev) => ({ ...prev, [name]: true }));
+                            try {
+                              const res = await fetch("/api/ai-advice", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ playerName: name, parStats: profile.parStats, totalAvgPutts: profile.totalAvgPutts, insights: profile.insights }),
+                              });
+                              const data = await res.json();
+                              if (data.advice) {
+                                const oldAdvice = aiAdvice[name];
+                                const newHistory = { ...aiHistory, [name]: [...(aiHistory[name] || []), oldAdvice] };
+                                const newCurrent = { ...aiAdvice, [name]: data.advice };
+                                setAiAdvice(newCurrent);
+                                setAiHistory(newHistory);
+                                try { localStorage.setItem("ai-coach-advice", JSON.stringify({ current: newCurrent, history: newHistory })); } catch {}
+                              }
+                            } catch { /* ignore */ }
+                            setAiLoading((prev) => ({ ...prev, [name]: false }));
+                          }}
+                          disabled={aiLoading[name]}
+                          className="text-[9px] text-amber-500 font-medium"
+                        >
+                          {aiLoading[name] ? "..." : "Ververs"}
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => setAiExpanded(aiExpanded === name ? null : name)}
+                        className="w-full bg-amber-50 rounded-lg p-2 text-left active:scale-[0.99] transition-transform"
+                      >
+                        <p className="text-[10px] text-gray-600 leading-relaxed italic line-clamp-2">{aiAdvice[name]}</p>
+                        <p className="text-[9px] text-amber-500 mt-0.5">Tik voor groter</p>
+                      </button>
+                    </div>
                   ) : (
                     <button
                       onClick={async () => {
@@ -697,15 +740,14 @@ export default function HeadToHeadPage() {
                           const res = await fetch("/api/ai-advice", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                              playerName: name,
-                              parStats: profile.parStats,
-                              totalAvgPutts: profile.totalAvgPutts,
-                              insights: profile.insights,
-                            }),
+                            body: JSON.stringify({ playerName: name, parStats: profile.parStats, totalAvgPutts: profile.totalAvgPutts, insights: profile.insights }),
                           });
                           const data = await res.json();
-                          if (data.advice) setAiAdvice((prev) => ({ ...prev, [name]: data.advice }));
+                          if (data.advice) {
+                            const newCurrent = { ...aiAdvice, [name]: data.advice };
+                            setAiAdvice(newCurrent);
+                            try { localStorage.setItem("ai-coach-advice", JSON.stringify({ current: newCurrent, history: aiHistory })); } catch {}
+                          }
                         } catch { /* ignore */ }
                         setAiLoading((prev) => ({ ...prev, [name]: false }));
                       }}
@@ -727,7 +769,7 @@ export default function HeadToHeadPage() {
                 onClick={() => setAiExpanded(null)}
               >
                 <div
-                  className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl space-y-3"
+                  className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl space-y-3 max-h-[80vh] overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <div className="flex items-center gap-2">
@@ -738,6 +780,15 @@ export default function HeadToHeadPage() {
                     </div>
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed italic">{aiAdvice[aiExpanded]}</p>
+                  {/* Eerdere adviezen */}
+                  {aiHistory[aiExpanded] && aiHistory[aiExpanded].length > 0 && (
+                    <div className="border-t border-gray-100 pt-3 space-y-2">
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Eerdere adviezen</p>
+                      {[...aiHistory[aiExpanded]].reverse().map((prev, i) => (
+                        <p key={i} className="text-xs text-gray-400 leading-relaxed italic">{prev}</p>
+                      ))}
+                    </div>
+                  )}
                   <button
                     onClick={() => setAiExpanded(null)}
                     className="w-full py-2.5 rounded-xl bg-sand text-sm font-medium text-gray-600"

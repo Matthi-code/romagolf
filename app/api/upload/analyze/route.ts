@@ -16,10 +16,13 @@ KOLOMMEN op de scorekaart (van links naar rechts):
 - Kolom 3: Matthi SLAGEN (het grote handgeschreven getal)
 - Kolom 4: Matthi PUTTS (het kleine getal ernaast, soms superscript)
 
-BOVENAAN DE KAART:
-- Er staan letters "R" (Rob) en "M" (Matthi)
-- LINKS van de "R" staat Rob's HCP (bijv. "26.2")
-- LINKS van de "M" staat Matthi's HCP (bijv. "19.9")
+BOVENAAN DE KAART — HCP UITLEZEN:
+- De header-rij bevat kolommen: Hole, Par, [afstanden], SI, Speler, Stable, Marker, Stable
+- Bovenaan bij "Speler" of "R" staat een handgeschreven getal = Rob's HCP (bijv. "26.2")
+- Bovenaan bij "Marker" of "M" staat een handgeschreven getal = Matthi's HCP (bijv. "19.9")
+- De HCP kan ook schuin/gedraaid geschreven staan in de header
+- Soms staat er ook een datum bovenaan (bijv. "29/3") — dat is GEEN HCP
+- HCP waarden liggen typisch tussen 10.0 en 36.0
 - Lees deze HCP waarden ALTIJD uit
 
 HOE SCORES ZIJN GESCHREVEN:

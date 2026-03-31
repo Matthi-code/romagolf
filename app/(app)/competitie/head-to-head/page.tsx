@@ -53,20 +53,27 @@ export default function HeadToHeadPage() {
   const [photoIdx] = useState(() => Math.floor(Math.random() * PHOTOS.length));
   const [holeRecords, setHoleRecords] = useState<HoleRecord[]>([]);
   const [aiAdvice, setAiAdvice] = useState<Record<string, string>>({});
-  const [aiHistory, setAiHistory] = useState<Record<string, string[]>>({});
+  const [aiHistory, setAiHistory] = useState<Record<string, { content: string; created_at: string; season: string | null }[]>>({});
   const [aiLoading, setAiLoading] = useState<Record<string, boolean>>({});
   const [aiExpanded, setAiExpanded] = useState<string | null>(null);
 
-  // Restore AI advice from localStorage
+  // Load AI advice from database
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem("ai-coach-advice");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.current) setAiAdvice(parsed.current);
-        if (parsed.history) setAiHistory(parsed.history);
+    async function loadAdvice() {
+      for (const name of ["Matthi", "Rob"]) {
+        try {
+          const res = await fetch(`/api/ai-advice?player=${name}`);
+          const data = await res.json();
+          if (data.advice && data.advice.length > 0) {
+            setAiAdvice((prev) => ({ ...prev, [name]: data.advice[0].content }));
+            if (data.advice.length > 1) {
+              setAiHistory((prev) => ({ ...prev, [name]: data.advice.slice(1) }));
+            }
+          }
+        } catch { /* ignore */ }
       }
-    } catch { /* ignore */ }
+    }
+    loadAdvice();
   }, []);
 
   useEffect(() => {
@@ -704,16 +711,13 @@ export default function HeadToHeadPage() {
                               const res = await fetch("/api/ai-advice", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ playerName: name, parStats: profile.parStats, totalAvgPutts: profile.totalAvgPutts, insights: profile.insights }),
+                                body: JSON.stringify({ playerName: name, parStats: profile.parStats, totalAvgPutts: profile.totalAvgPutts, insights: profile.insights, season: selectedSeason, roundCount: rounds.length }),
                               });
                               const data = await res.json();
                               if (data.advice) {
                                 const oldAdvice = aiAdvice[name];
-                                const newHistory = { ...aiHistory, [name]: [...(aiHistory[name] || []), oldAdvice] };
-                                const newCurrent = { ...aiAdvice, [name]: data.advice };
-                                setAiAdvice(newCurrent);
-                                setAiHistory(newHistory);
-                                try { localStorage.setItem("ai-coach-advice", JSON.stringify({ current: newCurrent, history: newHistory })); } catch {}
+                                setAiHistory((prev) => ({ ...prev, [name]: [{ content: oldAdvice, created_at: new Date().toISOString(), season: selectedSeason }, ...(prev[name] || [])] }));
+                                setAiAdvice((prev) => ({ ...prev, [name]: data.advice }));
                               }
                             } catch { /* ignore */ }
                             setAiLoading((prev) => ({ ...prev, [name]: false }));
@@ -740,13 +744,11 @@ export default function HeadToHeadPage() {
                           const res = await fetch("/api/ai-advice", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ playerName: name, parStats: profile.parStats, totalAvgPutts: profile.totalAvgPutts, insights: profile.insights }),
+                            body: JSON.stringify({ playerName: name, parStats: profile.parStats, totalAvgPutts: profile.totalAvgPutts, insights: profile.insights, season: selectedSeason, roundCount: rounds.length }),
                           });
                           const data = await res.json();
                           if (data.advice) {
-                            const newCurrent = { ...aiAdvice, [name]: data.advice };
-                            setAiAdvice(newCurrent);
-                            try { localStorage.setItem("ai-coach-advice", JSON.stringify({ current: newCurrent, history: aiHistory })); } catch {}
+                            setAiAdvice((prev) => ({ ...prev, [name]: data.advice }));
                           }
                         } catch { /* ignore */ }
                         setAiLoading((prev) => ({ ...prev, [name]: false }));
@@ -782,10 +784,16 @@ export default function HeadToHeadPage() {
                   <p className="text-sm text-gray-700 leading-relaxed italic">{aiAdvice[aiExpanded]}</p>
                   {/* Eerdere adviezen */}
                   {aiHistory[aiExpanded] && aiHistory[aiExpanded].length > 0 && (
-                    <div className="border-t border-gray-100 pt-3 space-y-2">
+                    <div className="border-t border-gray-100 pt-3 space-y-3">
                       <p className="text-[10px] text-gray-400 uppercase tracking-wider">Eerdere adviezen</p>
-                      {[...aiHistory[aiExpanded]].reverse().map((prev, i) => (
-                        <p key={i} className="text-xs text-gray-400 leading-relaxed italic">{prev}</p>
+                      {aiHistory[aiExpanded].map((prev, i) => (
+                        <div key={i} className="space-y-0.5">
+                          <p className="text-[9px] text-gray-300">
+                            {prev.created_at ? new Date(prev.created_at).toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" }) : ""}
+                            {prev.season ? ` · ${prev.season}` : ""}
+                          </p>
+                          <p className="text-xs text-gray-400 leading-relaxed italic">{prev.content}</p>
+                        </div>
                       ))}
                     </div>
                   )}

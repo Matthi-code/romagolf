@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { usePlayer } from "@/hooks/usePlayer";
 import { getSeasonFromDate, getPlayStyle } from "@/lib/utils/season";
@@ -692,27 +692,87 @@ export default function UploadPage() {
 
       {/* Step: Done */}
       {step === "done" && (
-        <div className="bg-white rounded-2xl p-10 text-center space-y-4">
-          <span className="text-4xl block">✅</span>
-          <p className="font-display text-xl font-bold text-navy">Ronde opgeslagen!</p>
-          {weather && (
-            <p className="text-sm text-gray-500">
-              {weather.weather_icon} {weather.temperature_c}°C · {weather.weather_desc}
-            </p>
-          )}
-          <div className="flex gap-3 justify-center pt-2">
-            <button
-              onClick={() => { setStep("photo"); setScorecard(null); setError(""); setNotes(""); setWeather(null); setHoles(getDefaultHoles(loop)); }}
-              className="px-6 py-2.5 rounded-xl bg-sand-dark text-sm font-medium text-gray-700"
-            >
-              Nog een ronde
-            </button>
-            <button
-              onClick={() => router.push("/competitie/scorekaarten")}
-              className="px-6 py-2.5 rounded-xl bg-matthi text-sm font-medium text-white"
-            >
-              Bekijk scorekaarten
-            </button>
+        <div className="space-y-4">
+          <div className="bg-white rounded-2xl p-8 text-center space-y-4">
+            <span className="text-4xl block">✅</span>
+            <p className="font-display text-xl font-bold text-navy">Ronde opgeslagen!</p>
+            {weather && (
+              <p className="text-sm text-gray-500">
+                {weather.weather_icon} {weather.temperature_c}°C · {weather.weather_desc}
+              </p>
+            )}
+            <div className="flex gap-3 justify-center pt-2">
+              <button
+                onClick={() => { setStep("photo"); setScorecard(null); setError(""); setNotes(""); setWeather(null); setHoles(getDefaultHoles(loop)); }}
+                className="px-6 py-2.5 rounded-xl bg-sand-dark text-sm font-medium text-gray-700"
+              >
+                Nog een ronde
+              </button>
+              <button
+                onClick={() => router.push("/competitie/scorekaarten")}
+                className="px-6 py-2.5 rounded-xl bg-matthi text-sm font-medium text-white"
+              >
+                Bekijk scorekaarten
+              </button>
+            </div>
+          </div>
+
+          {/* Golf.nl doorsturen */}
+          <div className="bg-white rounded-2xl p-4 shadow-card space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🏌️</span>
+              <p className="font-display text-sm font-bold text-navy">Doorsturen naar golf.nl</p>
+            </div>
+            <p className="text-[10px] text-gray-400">Kopieer je scores snel naar de golf.nl app voor je handicap.</p>
+
+            {/* Compact score overzicht */}
+            <div className="bg-sand rounded-xl p-3">
+              <div className="grid grid-cols-[auto_1fr_1fr] gap-x-3 gap-y-0.5 text-[11px] font-mono">
+                <span className="text-gray-400">Hole</span>
+                <span className="text-rob font-semibold text-center">Rob</span>
+                <span className="text-matthi font-semibold text-center">Mat</span>
+                {holes.filter(h => h.rob_score || h.mat_score).map((h) => (
+                  <Fragment key={h.hole}>
+                    <span className="text-gray-400">{h.hole}</span>
+                    <span className="text-center">{h.rob_score || "-"}</span>
+                    <span className="text-center">{h.mat_score || "-"}</span>
+                  </Fragment>
+                ))}
+                <span className="text-gray-500 font-semibold border-t border-gray-200 pt-0.5">Tot</span>
+                <span className="text-center font-bold border-t border-gray-200 pt-0.5">{robScore || "-"}</span>
+                <span className="text-center font-bold border-t border-gray-200 pt-0.5">{matthiScore || "-"}</span>
+              </div>
+            </div>
+
+            {/* Info */}
+            <div className="text-[10px] text-gray-400 space-y-0.5">
+              <p>Bergvliet · {loop} · {date} · {seasonType === "zomer" ? "Qualifying" : "Non-qualifying"}</p>
+              {robHcp && <p>Rob HCP: {robHcp} · Matthi HCP: {matthiHcp || "-"}</p>}
+            </div>
+
+            {/* Open golf.nl knoppen */}
+            <div className="flex gap-2">
+              <a
+                href="https://mijn.golf.nl/mijn-spel/scores/scorekaart-aanmaken/scorekaart-condities"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2.5 rounded-xl bg-[#00875a] text-white text-sm font-medium text-center active:scale-[0.98] transition-transform"
+              >
+                Open mijn.golf.nl
+              </a>
+              <button
+                onClick={() => {
+                  const lines = holes
+                    .filter(h => h.rob_score || h.mat_score)
+                    .map(h => `${h.hole}: Rob ${h.rob_score || "-"} (${h.rob_putts || "-"}p) · Mat ${h.mat_score || "-"} (${h.mat_putts || "-"}p)`);
+                  const text = `Bergvliet ${loop} · ${date}\nRob: ${robScore} (HCP ${robHcp || "-"})\nMatthi: ${matthiScore} (HCP ${matthiHcp || "-"})\n\n${lines.join("\n")}`;
+                  navigator.clipboard.writeText(text).then(() => alert("Scores gekopieerd!")).catch(() => {});
+                }}
+                className="py-2.5 px-4 rounded-xl bg-gray-100 text-sm font-medium text-gray-600 active:scale-[0.98] transition-transform"
+              >
+                Kopieer
+              </button>
+            </div>
           </div>
         </div>
       )}

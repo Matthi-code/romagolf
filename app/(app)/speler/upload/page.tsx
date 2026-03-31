@@ -61,6 +61,24 @@ const BERGVLIET_B = [
   { hole: 16, par: 5, si: 14 }, { hole: 17, par: 4, si: 6 }, { hole: 18, par: 3, si: 10 },
 ];
 
+function resizeImage(file: File, maxWidth: number): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // JPEG quality 0.8 = goed genoeg voor AI, veel kleiner
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+      resolve(dataUrl.split(",")[1]);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 function getDefaultHoles(loop: string): HoleEdit[] {
   const holes = loop === "1-9" ? BERGVLIET_A : loop === "10-18" ? BERGVLIET_B : [...BERGVLIET_A, ...BERGVLIET_B];
   return holes.map((h) => ({
@@ -158,68 +176,64 @@ export default function UploadPage() {
     setPhotoFile(file);
 
     try {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const base64 = (reader.result as string).split(",")[1];
-        const mediaType = file.type || "image/jpeg";
+      // Verklein foto voor snellere AI analyse (max 1200px breed)
+      const resizedBase64 = await resizeImage(file, 1200);
 
-        const res = await fetch("/api/upload/analyze", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image_base64: base64, media_type: mediaType }),
-        });
+      const res = await fetch("/api/upload/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image_base64: resizedBase64, media_type: "image/jpeg" }),
+      });
 
-        const data = await res.json();
+      const data = await res.json();
 
-        if (!res.ok) {
-          setError(data.error || "Kon scorekaart niet lezen");
-          setRawResponse(data.raw || "");
-          setStep("review");
-          return;
-        }
-
-        setScorecard(data);
-        setRobScore(data.speler_score?.toString() || "");
-        setRobStb(data.speler_stableford?.toString() || "");
-        setRobPutts(data.speler_putts?.toString() || "");
-        setRobHcp(data.speler_hcp?.toString() || "");
-        setMatthiScore(data.marker_score?.toString() || "");
-        setMatthiStb(data.marker_stableford?.toString() || "");
-        setMatthiPutts(data.marker_putts?.toString() || "");
-        setMatthiHcp(data.marker_hcp?.toString() || "");
-        setLoop(data.loop || "10-18");
-        setHolesPlayed(data.holes_played?.toString() || "9");
-        if (data.opmerking) setNotes(data.opmerking);
-
-        // Vul hole scores in vanuit AI
-        if (data.hole_scores && data.hole_scores.length > 0) {
-          const defaultHoles = getDefaultHoles(data.loop || "10-18");
-          const aiHoles = data.hole_scores.map((h: ScorecardData["hole_scores"] extends (infer T)[] | undefined ? T : never) => {
-            const def = defaultHoles.find((d) => d.hole === h.hole);
-            return {
-              hole: h.hole,
-              par: h.par?.toString() || def?.par || "",
-              si: h.si?.toString() || def?.si || "",
-              rob_score: h.speler_score?.toString() || "",
-              rob_putts: h.speler_putts?.toString() || "",
-              mat_score: h.marker_score?.toString() || "",
-              mat_putts: h.marker_putts?.toString() || "",
-            };
-          });
-          setHoles(aiHoles);
-        } else {
-          setHoles(getDefaultHoles(data.loop || "10-18"));
-        }
-
-        // Auto-determine winner
-        if (data.speler_score != null && data.marker_score != null) {
-          setWinner(data.marker_score < data.speler_score ? "matthi" : data.speler_score < data.marker_score ? "rob" : "gelijk");
-        }
-
+      if (!res.ok) {
+        setError(data.error || "Kon scorekaart niet lezen");
+        setRawResponse(data.raw || "");
         setStep("review");
-        fetchWeather();
-      };
-      reader.readAsDataURL(file);
+        return;
+      }
+
+      setScorecard(data);
+      setRobScore(data.speler_score?.toString() || "");
+      setRobStb(data.speler_stableford?.toString() || "");
+      setRobPutts(data.speler_putts?.toString() || "");
+      setRobHcp(data.speler_hcp?.toString() || "");
+      setMatthiScore(data.marker_score?.toString() || "");
+      setMatthiStb(data.marker_stableford?.toString() || "");
+      setMatthiPutts(data.marker_putts?.toString() || "");
+      setMatthiHcp(data.marker_hcp?.toString() || "");
+      setLoop(data.loop || "10-18");
+      setHolesPlayed(data.holes_played?.toString() || "9");
+      if (data.opmerking) setNotes(data.opmerking);
+
+      // Vul hole scores in vanuit AI
+      if (data.hole_scores && data.hole_scores.length > 0) {
+        const defaultHoles = getDefaultHoles(data.loop || "10-18");
+        const aiHoles = data.hole_scores.map((h: ScorecardData["hole_scores"] extends (infer T)[] | undefined ? T : never) => {
+          const def = defaultHoles.find((d) => d.hole === h.hole);
+          return {
+            hole: h.hole,
+            par: h.par?.toString() || def?.par || "",
+            si: h.si?.toString() || def?.si || "",
+            rob_score: h.speler_score?.toString() || "",
+            rob_putts: h.speler_putts?.toString() || "",
+            mat_score: h.marker_score?.toString() || "",
+            mat_putts: h.marker_putts?.toString() || "",
+          };
+        });
+        setHoles(aiHoles);
+      } else {
+        setHoles(getDefaultHoles(data.loop || "10-18"));
+      }
+
+      // Auto-determine winner
+      if (data.speler_score != null && data.marker_score != null) {
+        setWinner(data.marker_score < data.speler_score ? "matthi" : data.speler_score < data.marker_score ? "rob" : "gelijk");
+      }
+
+      setStep("review");
+      fetchWeather();
     } catch {
       setError("Fout bij uploaden");
       setStep("photo");

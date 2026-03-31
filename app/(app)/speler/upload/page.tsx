@@ -80,6 +80,7 @@ export default function UploadPage() {
   const [step, setStep] = useState<Step>("photo");
   const [error, setError] = useState("");
   const [rawResponse, setRawResponse] = useState("");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
 
   // Form data
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
@@ -152,6 +153,7 @@ export default function UploadPage() {
 
     setStep("analyzing");
     setError("");
+    setPhotoFile(file);
 
     try {
       const reader = new FileReader();
@@ -285,6 +287,17 @@ export default function UploadPage() {
         setError(data.error || "Opslaan mislukt");
         setStep("review");
         return;
+      }
+
+      // Upload scorekaart foto als die er is
+      if (photoFile && data.id) {
+        try {
+          const formData = new FormData();
+          formData.append("file", photoFile);
+          formData.append("round_id", data.id);
+          formData.append("caption", "scorekaart");
+          await fetch("/api/photos/upload", { method: "POST", body: formData });
+        } catch { /* foto upload niet kritiek */ }
       }
 
       setStep("done");

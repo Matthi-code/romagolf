@@ -62,6 +62,8 @@ export default function RondeDetailPage() {
   const [editTime, setEditTime] = useState("");
   const [savingHero, setSavingHero] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [scorecardPhoto, setScorecardPhoto] = useState<string | null>(null);
+  const [showScorecard, setShowScorecard] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -100,6 +102,18 @@ export default function RondeDetailPage() {
         const pm = new Map(players?.map((p) => [p.id, p.name]) || []);
         setHoleScores(holes.map((h) => ({ ...h, player_name: pm.get(h.player_id) || "?" })));
       }
+
+      // Scorekaart foto laden
+      const { data: photos } = await supabase
+        .from("photos")
+        .select("url")
+        .eq("round_id", id)
+        .eq("caption", "scorekaart")
+        .limit(1);
+      if (photos && photos.length > 0) {
+        setScorecardPhoto(photos[0].url);
+      }
+
       setLoading(false);
     }
     load();
@@ -626,6 +640,38 @@ export default function RondeDetailPage() {
             <span><span className="inline-block w-2.5 h-2.5 rounded bg-red-200 mr-0.5" />Dbl+</span>
           </div>
         </div>
+      )}
+
+      {/* Scorekaart foto */}
+      {scorecardPhoto && (
+        <>
+          <button
+            onClick={() => setShowScorecard(true)}
+            className="w-full bg-white rounded-xl p-3 shadow-card flex items-center gap-3 active:scale-[0.99] transition-transform"
+          >
+            <img src={scorecardPhoto} alt="Scorekaart" className="w-14 h-14 rounded-lg object-cover" />
+            <div className="text-left">
+              <p className="text-xs font-medium text-navy">Scorekaart foto</p>
+              <p className="text-[10px] text-gray-400">Tik om te bekijken</p>
+            </div>
+          </button>
+          {showScorecard && (
+            <div
+              className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+              onClick={() => setShowScorecard(false)}
+            >
+              <div className="relative max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
+                <img src={scorecardPhoto} alt="Scorekaart" className="w-full rounded-xl" />
+                <button
+                  onClick={() => setShowScorecard(false)}
+                  className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 text-white text-lg flex items-center justify-center"
+                >
+                  x
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Golf.nl doorsturen */}

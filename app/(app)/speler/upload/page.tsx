@@ -99,6 +99,7 @@ export default function UploadPage() {
   const [error, setError] = useState("");
   const [rawResponse, setRawResponse] = useState("");
   const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [analyzeStatus, setAnalyzeStatus] = useState("");
 
   // Form data
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
@@ -177,8 +178,10 @@ export default function UploadPage() {
 
     try {
       // Verklein foto voor snellere AI analyse (max 1200px breed)
+      setAnalyzeStatus("Foto verkleinen...");
       const resizedBase64 = await resizeImage(file, 1200);
 
+      setAnalyzeStatus("AI leest scorekaart...");
       const res = await fetch("/api/upload/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -194,6 +197,7 @@ export default function UploadPage() {
         return;
       }
 
+      setAnalyzeStatus("Gegevens verwerken...");
       setScorecard(data);
       setRobScore(data.speler_score?.toString() || "");
       setRobStb(data.speler_stableford?.toString() || "");
@@ -405,10 +409,20 @@ export default function UploadPage() {
 
       {/* Step: Analyzing */}
       {step === "analyzing" && (
-        <div className="bg-white rounded-2xl p-10 text-center">
-          <div className="w-10 h-10 border-3 border-matthi border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="font-medium text-gray-700">Scorekaart wordt gelezen...</p>
-          <p className="text-xs text-gray-400 mt-1">Dit duurt een paar seconden</p>
+        <div className="bg-white rounded-2xl p-10 text-center space-y-4">
+          <div className="w-10 h-10 border-3 border-matthi border-t-transparent rounded-full animate-spin mx-auto" />
+          <div>
+            <p className="font-medium text-gray-700">Scorekaart wordt gelezen...</p>
+            <p className="text-xs text-gray-500 mt-1">{analyzeStatus || "Voorbereiden..."}</p>
+          </div>
+          {/* Voortgangsbalk */}
+          <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+            <div
+              className="h-full bg-matthi rounded-full transition-all duration-1000"
+              style={{ width: analyzeStatus.includes("AI leest") ? "60%" : analyzeStatus.includes("verwerken") ? "90%" : "20%", transition: "width 2s ease" }}
+            />
+          </div>
+          <p className="text-[10px] text-gray-300">Meestal 10-20 seconden</p>
         </div>
       )}
 

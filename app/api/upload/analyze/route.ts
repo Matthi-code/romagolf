@@ -22,7 +22,7 @@ De bovenste rij van de kaart bevat handgeschreven tekst. Zoek naar:
 - Een letter "M" (= Matthi) met LINKS ervan een decimaal getal = Matthi's HCP
 - Voorbeeld: "26,2 R" betekent Rob's HCP is 26.2, "19,9 M" betekent Matthi's HCP is 19.9
 - De letters R en M staan in de kolommen Speler en Marker
-- HCP is een getal met 1 decimaal, typisch tussen 10.0 en 36.0
+- HCP is een getal met 1 decimaal, typisch tussen 5.0 en 36.0 (Rob rond 16, Matthi rond 20)
 - Er staat ook een datum bovenaan (bijv. "29/3") — dat is GEEN HCP, datums bevatten een /
 - ALS JE GEEN HCP KUNT VINDEN, geef null terug — maar kijk GOED, het staat er bijna altijd
 

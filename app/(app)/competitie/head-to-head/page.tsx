@@ -571,6 +571,119 @@ export default function HeadToHeadPage() {
         </div>
       )}
 
+      {/* Spelersprofiel — Sterke & Zwakke punten */}
+      {filteredHoles.length >= 9 && (() => {
+        function analyzePlayer(name: string) {
+          const ph = filteredHoles.filter((h) => h.player_name === name);
+          if (ph.length < 9) return null;
+
+          const byPar: Record<number, { scores: number[]; putts: number[] }> = { 3: { scores: [], putts: [] }, 4: { scores: [], putts: [] }, 5: { scores: [], putts: [] } };
+          ph.forEach((h) => {
+            if (byPar[h.par]) {
+              byPar[h.par].scores.push(h.gross_score);
+              if (h.putts != null) byPar[h.par].putts.push(h.putts);
+            }
+          });
+
+          const avg = (arr: number[]) => arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : null;
+          const parStats = [3, 4, 5].map((par) => ({
+            par,
+            avgScore: avg(byPar[par].scores),
+            avgPutts: avg(byPar[par].putts),
+            overPar: avg(byPar[par].scores) != null ? avg(byPar[par].scores)! - par : null,
+            count: byPar[par].scores.length,
+          }));
+
+          const totalAvgPutts = avg(ph.filter((h) => h.putts != null).map((h) => h.putts!));
+
+          // Bepaal sterke en zwakke punten
+          const insights: { text: string; type: "strong" | "weak" }[] = [];
+
+          // Sorteer par-types op over-par (laagst = sterkst)
+          const sorted = parStats.filter((p) => p.overPar != null && p.count >= 2).sort((a, b) => a.overPar! - b.overPar!);
+          if (sorted.length >= 2) {
+            const best = sorted[0];
+            const worst = sorted[sorted.length - 1];
+
+            const parLabel = (p: number) => p === 3 ? "korte holes (par 3)" : p === 4 ? "middelange holes (par 4)" : "lange holes (par 5)";
+            const gameLabel = (p: number) => p === 3 ? "kort spel" : p === 4 ? "allround spel" : "lang spel";
+
+            if (best.overPar! < worst.overPar! - 0.3) {
+              insights.push({ text: `Sterk op ${parLabel(best.par)} (+${best.overPar!.toFixed(1)}) — goed ${gameLabel(best.par)}`, type: "strong" });
+              insights.push({ text: `Verbeterpunt: ${parLabel(worst.par)} (+${worst.overPar!.toFixed(1)})`, type: "weak" });
+            }
+          }
+
+          // Putting analyse
+          if (totalAvgPutts != null) {
+            if (totalAvgPutts <= 1.8) {
+              insights.push({ text: `Sterke putter (gem. ${totalAvgPutts.toFixed(1)} putts/hole)`, type: "strong" });
+            } else if (totalAvgPutts >= 2.3) {
+              insights.push({ text: `Putting is verbeterpunt (gem. ${totalAvgPutts.toFixed(1)} putts/hole)`, type: "weak" });
+            }
+          }
+
+          // Par5 met weinig putts maar hoge score = approach probleem
+          const par5 = parStats.find((p) => p.par === 5);
+          if (par5 && par5.avgPutts != null && par5.overPar != null && par5.avgPutts <= 2.0 && par5.overPar >= 2.0) {
+            insights.push({ text: `Lang spel kost slagen — putting is niet het probleem op par 5`, type: "weak" });
+          }
+
+          // Par3 met veel putts = green reading / approach
+          const par3 = parStats.find((p) => p.par === 3);
+          if (par3 && par3.avgPutts != null && par3.avgPutts >= 2.3) {
+            insights.push({ text: `Veel putts op par 3 (${par3.avgPutts.toFixed(1)}/hole) — green niet goed bereikt?`, type: "weak" });
+          }
+
+          return { parStats, insights, totalAvgPutts };
+        }
+
+        const matthiProfile = analyzePlayer("Matthi");
+        const robProfile = analyzePlayer("Rob");
+
+        if (!matthiProfile && !robProfile) return null;
+
+        return (
+          <div className="bg-white rounded-xl p-3 shadow-card">
+            <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-3">Spelersprofiel</p>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { name: "Matthi", profile: matthiProfile, color: "text-matthi" },
+                { name: "Rob", profile: robProfile, color: "text-rob" },
+              ].map(({ name, profile, color }) => profile && (
+                <div key={name}>
+                  <p className={`text-xs font-semibold ${color} mb-1.5`}>{name}</p>
+                  <div className="space-y-1">
+                    {profile.insights.length > 0 ? profile.insights.map((ins, i) => (
+                      <p key={i} className="text-[10px] text-gray-600 leading-tight">
+                        <span className={ins.type === "strong" ? "text-green-600" : "text-amber-600"}>
+                          {ins.type === "strong" ? "+" : "−"}
+                        </span>{" "}
+                        {ins.text}
+                      </p>
+                    )) : (
+                      <p className="text-[10px] text-gray-400">Meer rondes nodig voor analyse</p>
+                    )}
+                  </div>
+                  {/* Compact par stats */}
+                  <div className="mt-2 space-y-0.5">
+                    {profile.parStats.filter((p) => p.count >= 1).map((p) => (
+                      <div key={p.par} className="flex items-center gap-1 text-[9px] font-mono text-gray-400">
+                        <span className="w-7">Par{p.par}</span>
+                        <span className="w-8 text-right text-gray-600 font-medium">+{p.overPar?.toFixed(1) ?? "-"}</span>
+                        <span className="w-10 text-right">{p.avgPutts?.toFixed(1) ?? "-"}p</span>
+                        <span className="text-gray-300">({p.count}x)</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-[9px] text-gray-300 mt-2 text-center">Gebaseerd op {filteredHoles.length / 2} holes per speler</p>
+          </div>
+        );
+      })()}
+
       {/* Foto */}
       <div
         className="w-full aspect-[16/7] rounded-xl bg-cover bg-center"

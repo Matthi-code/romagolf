@@ -54,6 +54,7 @@ export default function HeadToHeadPage() {
   const [holeRecords, setHoleRecords] = useState<HoleRecord[]>([]);
   const [aiAdvice, setAiAdvice] = useState<Record<string, string>>({});
   const [aiLoading, setAiLoading] = useState<Record<string, boolean>>({});
+  const [aiExpanded, setAiExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -681,9 +682,13 @@ export default function HeadToHeadPage() {
 
                   {/* AI Advies */}
                   {aiAdvice[name] ? (
-                    <div className="mt-2 bg-amber-50 rounded-lg p-2">
-                      <p className="text-[10px] text-gray-600 leading-relaxed italic">{aiAdvice[name]}</p>
-                    </div>
+                    <button
+                      onClick={() => setAiExpanded(aiExpanded === name ? null : name)}
+                      className="mt-2 w-full bg-amber-50 rounded-lg p-2 text-left active:scale-[0.99] transition-transform"
+                    >
+                      <p className="text-[10px] text-gray-600 leading-relaxed italic line-clamp-2">{aiAdvice[name]}</p>
+                      <p className="text-[9px] text-amber-500 mt-0.5">Tik voor groter</p>
+                    </button>
                   ) : (
                     <button
                       onClick={async () => {
@@ -714,6 +719,34 @@ export default function HeadToHeadPage() {
               ))}
             </div>
             <p className="text-[9px] text-gray-300 mt-2 text-center">Gebaseerd op {filteredHoles.length / 2} holes per speler</p>
+
+            {/* Expanded AI advies overlay */}
+            {aiExpanded && aiAdvice[aiExpanded] && (
+              <div
+                className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-6"
+                onClick={() => setAiExpanded(null)}
+              >
+                <div
+                  className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl space-y-3"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🏌️</span>
+                    <div>
+                      <p className="font-display text-lg font-bold text-navy">AI Coach</p>
+                      <p className={`text-xs font-semibold ${aiExpanded === "Matthi" ? "text-matthi" : "text-rob"}`}>{aiExpanded}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700 leading-relaxed italic">{aiAdvice[aiExpanded]}</p>
+                  <button
+                    onClick={() => setAiExpanded(null)}
+                    className="w-full py-2.5 rounded-xl bg-sand text-sm font-medium text-gray-600"
+                  >
+                    Sluiten
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         );
       })()}

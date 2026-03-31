@@ -638,14 +638,22 @@ export default function RondeDetailPage() {
             </div>
           </div>
           <div className="flex gap-2">
-            <a
-              href="https://mijn.golf.nl/mijn-spel/scores"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isAndroid = /Android/.test(navigator.userAgent);
+                if (isIOS) {
+                  window.location.href = "https://apps.apple.com/nl/app/golf-nl-app/id1140989195";
+                } else if (isAndroid) {
+                  window.location.href = "intent://mijn-spel/scores#Intent;package=com.ngf.mijngolf;scheme=https;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.ngf.mijngolf;end";
+                } else {
+                  window.open("https://mijn.golf.nl/mijn-spel/scores", "_blank");
+                }
+              }}
               className="flex-1 py-2 rounded-xl bg-[#00875a] text-white text-xs font-medium text-center active:scale-[0.98] transition-transform"
             >
-              Open golf.nl
-            </a>
+              Open golf.nl app
+            </button>
             <button
               onClick={() => {
                 if (!round) return;

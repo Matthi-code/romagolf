@@ -9,21 +9,20 @@
 | Aspect | Waarde |
 |--------|--------|
 | **Fase** | Fase 5: Productie |
-| **Focus** | Statistieken uitbreiden + AI scorekaart fix |
-| **Blokkade** | AI scorekaart-uitlezing nog niet gefixt (scores vs putts verwisseling) |
-| **Laatste update** | 2026-03-31 |
+| **Focus** | Features uitbreiden + goedkeuringsflow |
+| **Blokkade** | Geen — Vision prompt meerdere keren verbeterd, moet getest worden |
+| **Laatste update** | 2026-04-01 |
 
 ---
 
 ## Volgende Stap
 
-1. **AI scorekaart uitlezing fixen** — scores vs putts verwisseling (prioriteit 1)
-2. **Meer statistieken toevoegen** — ideeën uit E-Golf app screenshots
-3. Next.js upgraden naar nieuwste versie
-4. Geüploade foto's gebruiken als random foto's op andere pagina's
-2. Next.js upgraden naar nieuwste versie
-3. Geüploade foto's gebruiken als random foto's op andere pagina's
-4. Custom domein overwegen (bijv. romagolf.nl)
+1. **Scorekaart goedkeuring** — marker keurt speler goed, ronde telt pas mee na akkoord
+2. **Vision prompt testen** — HCP + scores/putts uitlezing is verbeterd, valideren met nieuwe upload
+3. **Stableford punten** weer tonen
+4. **HCP verloop grafiek** zoals golf.nl
+5. Next.js upgraden
+6. Foto's als achtergronden
 
 ---
 
@@ -40,6 +39,27 @@
 ---
 
 ## Sessie Historie
+
+### 2026-04-01 — Sessie 6: Features, AI Coach, golf.nl koppeling
+
+**Gedaan:**
+- Seizoen fix: maart = Zomer + seizoen aanpasbaar in upload review stap
+- Vision prompt 3x verbeterd: kolommen expliciet, HCP uitlezing, Rob/Matthi hints
+- Golf.nl doorsturen: "Open golf.nl" + "Kopieer" knoppen (upload + ronde detail)
+- Spelersprofiel op H2H: sterke/zwakke punten per speler (berekend, geen AI kosten)
+- AI Coach advies per speler: humoristisch, opgeslagen in DB, historie met datum
+- AI Coach overlay: tik voor groot + eerdere adviezen, ververs-knopje
+- Scorekaart foto opslaan bij upload + bekijken op ronde detail (thumbnail + fullscreen)
+- Upload: foto kiezen uit galerij (niet alleen camera)
+- AI opmerking bij scorekaart uitlezing (humoristisch als er reden voor is)
+- Golf.nl API onderzoek: geen publieke API, OutSystems backend, webapp is beste optie
+- Bergvliet hole-lengtes (gele tee) ingebakken voor golfkilometers
+- Ideeën gelogd: golf.nl koppeling, scorekaart goedkeuring
+
+**Volgende sessie:**
+- Scorekaart goedkeuring bouwen
+- Vision prompt testen met nieuwe upload
+- Stableford + HCP grafiek
 
 ### 2026-03-31 — Sessie 5: Statistieken pagina
 

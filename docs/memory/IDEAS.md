@@ -11,6 +11,8 @@
 | 2026-03-29 | Gebruiker | Stableford punten weer toevoegen/tonen | 💡 onderzoeken | ⭐⭐ |
 | 2026-03-29 | Gebruiker | Statistieken uitbreiden: meest bezochte banen, 18h records | 💡 onderzoeken | ⭐⭐ |
 | 2026-03-29 | Gebruiker | HCP verloop grafiek zoals golf.nl: dagresultaat (lijn) + handicap (stippellijn), begin- en eindwaarde labels | 💡 onderzoeken | ⭐⭐ |
+| 2026-03-31 | Gebruiker | Scorekaart goedkeuring: bij review vragen "Wie keurt goed?" (Rob/Matthi). Marker keurt speler goed en vice versa. Geen aparte auth nodig. Ronde telt pas mee na goedkeuring | 💡 onderzoeken | ⭐⭐ |
+| 2026-03-31 | Gebruiker | API koppeling met golf.nl — HCP, scores, rondes automatisch ophalen | 💡 onderzoeken | ⭐⭐ |
 | 2026-03-29 | AI | Geüploade foto's gebruiken als random achtergronden op alle pagina's | 💡 onderzoeken | ⭐ |
 | 2026-03-29 | Gebruiker | Golfkilometers op basis van afslag→hole afstand per hole | ✅ gerealiseerd | ⭐ |
 
@@ -39,6 +41,11 @@
 
 | Datum | Idee | Verwijzing |
 |-------|------|------------|
+| 2026-04-01 | Spelersprofiel: sterke/zwakke punten per speler | /competitie/head-to-head |
+| 2026-04-01 | AI Coach advies (humoristisch, DB, historie) | /competitie/head-to-head |
+| 2026-04-01 | Scorekaart foto opslaan + bekijken per ronde | /speler/rondes/[id] |
+| 2026-04-01 | Golf.nl doorsturen (Open + Kopieer) | /speler/upload + rondes |
+| 2026-04-01 | AI opmerking bij scorekaart uitlezing | /speler/upload |
 | 2026-03-31 | Scores donut, par gemiddelde, beste/slechtste ronde | /speler/statistieken |
 | 2026-03-31 | Golfkilometers (gele tee Bergvliet) | /speler/statistieken |
 | 2026-03-29 | Head-to-head vergelijking | /competitie/head-to-head |
